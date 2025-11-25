@@ -30,7 +30,7 @@ end
 local function SaveData()
     -- Force SavedVariables to be written
     -- In WoW 1.12, this happens automatically, but we trigger an update
-    DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Auto-saved statistics!")
+    --DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Auto-saved statistics!")
 end
 
 -- Update display
@@ -189,4 +189,5 @@ SlashCmdList["SNOWBALL"] = function(msg)
         DEFAULT_CHAT_FRAME:AddMessage("/snowball hide - Hide tracker")
         DEFAULT_CHAT_FRAME:AddMessage("/snowball save - Manually save statistics")
     end
+
 end
