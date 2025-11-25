@@ -1,5 +1,5 @@
 # snowball
-Snowball tracker thrown total and on YOU!
+Snowball tracker thrown total, on you and by you!
 
 Important info: This addon works only with SuperWoW!!!
 
