@@ -1,0 +1,8 @@
+## Interface: 11200
+## Title: Simple Snowball Tracker
+## Notes: Tracks Snowball (21343) casts using UNIT_CASTEVENT
+## Author: me0wg4ming
+## Version: 1.0
+## SavedVariables: SimpleSnowballTracker_Total, SimpleSnowballTracker_AtMe
+
+snowball.lua
