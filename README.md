@@ -10,4 +10,4 @@ Important info: This addon works only with SuperWoW!!!
 - /snowball hide - Hide tracker
 - /snowball save - Manually save statistics
 
-<img width="228" height="139" alt="grafik" src="https://github.com/user-attachments/assets/ecdecd1d-d0c3-4406-b92e-899b0a043512" />
+<img width="153" height="125" alt="grafik" src="https://github.com/user-attachments/assets/d8a0d613-144f-4bfa-b599-45f2a3f992c7" />
