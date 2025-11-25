@@ -1,7 +1,12 @@
 -- SimpleSnowballTracker - SuperWoW UNIT_CASTEVENT based tracker
--- Tracks Snowball (21343) casts in WoW 1.12.1
+-- Tracks Snowball casts in WoW 1.12.1
 
-local SNOWBALL_SPELL_ID = 21343
+-- Snowball Spell IDs
+local SNOWBALL_SPELL_IDS = {
+    [21343] = true,
+    [25677] = true,
+    [17061] = true,
+}
 
 -- SavedVariables
 SimpleSnowballTracker_Total = SimpleSnowballTracker_Total or 0
@@ -54,7 +59,7 @@ local function CreateUI()
         tile = false,
         insets = { left = 0, right = 0, top = 0, bottom = 0 }
     })
-    mainFrame:SetBackdropColor(0, 0, 0, 0.6)  -- Sehr transparent
+    mainFrame:SetBackdropColor(0, 0, 0, 0.6)
     
     -- Title
     local title = mainFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -76,7 +81,7 @@ end
 -- Handle UNIT_CASTEVENT
 local function OnSnowballCast(casterGUID, targetGUID, eventType, spellID)
     if eventType ~= "CAST" then return end
-    if spellID ~= SNOWBALL_SPELL_ID then return end
+    if not SNOWBALL_SPELL_IDS[spellID] then return end
     
     -- Count all snowballs
     SimpleSnowballTracker_Total = SimpleSnowballTracker_Total + 1
