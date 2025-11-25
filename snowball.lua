@@ -30,15 +30,15 @@ end
 local function SaveData()
     -- Force SavedVariables to be written
     -- In WoW 1.12, this happens automatically, but we trigger an update
-    --DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Auto-saved statistics!")
+    DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Auto-saved statistics!")
 end
 
 -- Update display
 local function UpdateDisplay()
     if totalText and atMeText and byMeText then
-        totalText:SetText("Total snowballs thrown: |cff00ff00" .. SimpleSnowballTracker_Total .. "|r")
-        atMeText:SetText("Snowballs thrown at me: |cffffcc00" .. SimpleSnowballTracker_AtMe .. "|r")
-        byMeText:SetText("Snowballs thrown by me: |cff00ccff" .. SimpleSnowballTracker_ByMe .. "|r")
+        totalText:SetText("Total thrown: |cff00ff00" .. SimpleSnowballTracker_Total .. "|r")
+        atMeText:SetText("Thrown at me: |cffffcc00" .. SimpleSnowballTracker_AtMe .. "|r")
+        byMeText:SetText("Thrown by me: |cff00ccff" .. SimpleSnowballTracker_ByMe .. "|r")
     end
 end
 
@@ -47,7 +47,7 @@ local function CreateUI()
     if mainFrame then return end
     
     mainFrame = CreateFrame("Frame", "SnowballTrackerFrame", UIParent)
-    mainFrame:SetWidth(160)
+    mainFrame:SetWidth(110)
     mainFrame:SetHeight(90)
     mainFrame:SetPoint("CENTER", 0, 0)
     mainFrame:SetMovable(true)
@@ -103,8 +103,8 @@ local function CreateAutoSave()
     autoSaveFrame:SetScript("OnUpdate", function()
         this.timeSinceLastSave = this.timeSinceLastSave + arg1
         
-        -- Save every 1 minute (60 seconds)
-        if this.timeSinceLastSave >= 60 then
+        -- Save every 5 minutes (300 seconds)
+        if this.timeSinceLastSave >= 300 then
             SaveData()
             this.timeSinceLastSave = 0
         end
@@ -150,7 +150,7 @@ events:SetScript("OnEvent", function()
         
         CreateUI()
         CreateAutoSave()
-        DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Tracker loaded! Auto-save every 1 minute.")
+        DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Tracker loaded! Auto-save every 5 minutes.")
         
     elseif event == "UNIT_CASTEVENT" then
         OnSnowballCast(arg1, arg2, arg3, arg4)
@@ -189,5 +189,4 @@ SlashCmdList["SNOWBALL"] = function(msg)
         DEFAULT_CHAT_FRAME:AddMessage("/snowball hide - Hide tracker")
         DEFAULT_CHAT_FRAME:AddMessage("/snowball save - Manually save statistics")
     end
-
 end
