@@ -1,5 +1,6 @@
 # snowball
 Snowball tracker thrown total, on you and by you!
+Shares the tracked thrown snowballs across all characters on the same account!
 
 Important info: This addon works only with SuperWoW!!!
 
