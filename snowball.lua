@@ -12,6 +12,8 @@ local SNOWBALL_SPELL_IDS = {
 SimpleSnowballTracker_Total = SimpleSnowballTracker_Total or 0
 SimpleSnowballTracker_AtMe = SimpleSnowballTracker_AtMe or 0
 SimpleSnowballTracker_ByMe = SimpleSnowballTracker_ByMe or 0
+SimpleSnowballTracker_MinimapX = SimpleSnowballTracker_MinimapX or 0
+SimpleSnowballTracker_MinimapY = SimpleSnowballTracker_MinimapY or 0
 
 -- Frame references
 local mainFrame
@@ -19,6 +21,7 @@ local totalText
 local atMeText
 local byMeText
 local autoSaveFrame
+local minimapButton
 
 -- Get player GUID
 local function GetPlayerGUID()
@@ -30,7 +33,7 @@ end
 local function SaveData()
     -- Force SavedVariables to be written
     -- In WoW 1.12, this happens automatically, but we trigger an update
-    DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Auto-saved statistics!")
+    --DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Auto-saved statistics!")
 end
 
 -- Update display
@@ -103,12 +106,114 @@ local function CreateAutoSave()
     autoSaveFrame:SetScript("OnUpdate", function()
         this.timeSinceLastSave = this.timeSinceLastSave + arg1
         
-        -- Save every 5 minutes (300 seconds)
-        if this.timeSinceLastSave >= 300 then
+        -- Save every 5 minutes (60 seconds)
+        if this.timeSinceLastSave >= 60 then
             SaveData()
             this.timeSinceLastSave = 0
         end
     end)
+end
+
+-- Update minimap button position
+local function UpdateMinimapButton()
+    if not minimapButton then return end
+    
+    -- Set default position near minimap if not set
+    if SimpleSnowballTracker_MinimapX == 0 and SimpleSnowballTracker_MinimapY == 0 then
+        local mmX, mmY = Minimap:GetCenter()
+        SimpleSnowballTracker_MinimapX = mmX - 50
+        SimpleSnowballTracker_MinimapY = mmY + 50
+    end
+    
+    minimapButton:ClearAllPoints()
+    minimapButton:SetPoint("CENTER", UIParent, "BOTTOMLEFT", SimpleSnowballTracker_MinimapX, SimpleSnowballTracker_MinimapY)
+end
+
+-- Create minimap button
+local function CreateMinimapButton()
+    if minimapButton then return end
+    
+    minimapButton = CreateFrame("Button", "SnowballMinimapButton", UIParent)
+    minimapButton:SetWidth(32)
+    minimapButton:SetHeight(32)
+    minimapButton:SetFrameStrata("MEDIUM")
+    minimapButton:SetMovable(true)
+    minimapButton:EnableMouse(true)
+    minimapButton:SetClampedToScreen(true)
+    minimapButton:RegisterForDrag("LeftButton")
+    minimapButton:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+    minimapButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight")
+    
+    -- Icon texture
+    local icon = minimapButton:CreateTexture(nil, "BACKGROUND")
+    icon:SetWidth(20)
+    icon:SetHeight(20)
+    icon:SetPoint("CENTER", 0, 0)
+    icon:SetTexture("Interface\\Icons\\INV_Ammo_Snowball")
+    
+    -- Border
+    local overlay = minimapButton:CreateTexture(nil, "OVERLAY")
+    overlay:SetWidth(53)
+    overlay:SetHeight(53)
+    overlay:SetPoint("TOPLEFT", -2, 2)
+    overlay:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
+    
+    -- Left click: Move button freely
+    minimapButton:SetScript("OnDragStart", function()
+        this:StartMoving()
+    end)
+    
+    minimapButton:SetScript("OnDragStop", function()
+        this:StopMovingOrSizing()
+        local x, y = this:GetCenter()
+        SimpleSnowballTracker_MinimapX = x
+        SimpleSnowballTracker_MinimapY = y
+    end)
+    
+    -- Right click: Toggle frame visibility
+    minimapButton:SetScript("OnClick", function()
+        if arg1 == "RightButton" then
+            if mainFrame then
+                if mainFrame:IsVisible() then
+                    mainFrame:Hide()
+                    DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Hidden!")
+                else
+                    mainFrame:Show()
+                    DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Shown!")
+                end
+            end
+        end
+    end)
+    
+    -- Right click: Toggle frame visibility
+    minimapButton:SetScript("OnClick", function()
+        if arg1 == "RightButton" then
+            if mainFrame then
+                if mainFrame:IsVisible() then
+                    mainFrame:Hide()
+                    DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Hidden!")
+                else
+                    mainFrame:Show()
+                    DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Shown!")
+                end
+            end
+        end
+    end)
+    
+    -- Tooltip
+    minimapButton:SetScript("OnEnter", function()
+        GameTooltip:SetOwner(this, "ANCHOR_LEFT")
+        GameTooltip:SetText("|cffff0000Snowball Tracker|r")
+        GameTooltip:AddLine("Left-click and drag to move", 1, 1, 1)
+        GameTooltip:AddLine("Right-click to show/hide", 1, 1, 1)
+        GameTooltip:Show()
+    end)
+    
+    minimapButton:SetScript("OnLeave", function()
+        GameTooltip:Hide()
+    end)
+    
+    UpdateMinimapButton()
 end
 
 -- Handle UNIT_CASTEVENT
@@ -150,6 +255,7 @@ events:SetScript("OnEvent", function()
         
         CreateUI()
         CreateAutoSave()
+        CreateMinimapButton()
         DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Tracker loaded! Auto-save every 5 minutes.")
         
     elseif event == "UNIT_CASTEVENT" then
