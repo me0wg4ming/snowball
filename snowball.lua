@@ -14,6 +14,7 @@ SimpleSnowballTracker_AtMe = SimpleSnowballTracker_AtMe or 0
 SimpleSnowballTracker_ByMe = SimpleSnowballTracker_ByMe or 0
 SimpleSnowballTracker_MinimapX = SimpleSnowballTracker_MinimapX or 0
 SimpleSnowballTracker_MinimapY = SimpleSnowballTracker_MinimapY or 0
+SimpleSnowballTracker_IsHidden = SimpleSnowballTracker_IsHidden or false
 
 -- Frame references
 local mainFrame
@@ -93,7 +94,13 @@ local function CreateUI()
     byMeText:SetPoint("TOPLEFT", 10, -64)
     
     UpdateDisplay()
-    mainFrame:Show()
+    
+    -- Restore visibility state
+    if SimpleSnowballTracker_IsHidden then
+        mainFrame:Hide()
+    else
+        mainFrame:Show()
+    end
 end
 
 -- Create auto-save timer
@@ -176,24 +183,11 @@ local function CreateMinimapButton()
             if mainFrame then
                 if mainFrame:IsVisible() then
                     mainFrame:Hide()
+                    SimpleSnowballTracker_IsHidden = true
                     DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Hidden!")
                 else
                     mainFrame:Show()
-                    DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Shown!")
-                end
-            end
-        end
-    end)
-    
-    -- Right click: Toggle frame visibility
-    minimapButton:SetScript("OnClick", function()
-        if arg1 == "RightButton" then
-            if mainFrame then
-                if mainFrame:IsVisible() then
-                    mainFrame:Hide()
-                    DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Hidden!")
-                else
-                    mainFrame:Show()
+                    SimpleSnowballTracker_IsHidden = false
                     DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Shown!")
                 end
             end
@@ -278,11 +272,17 @@ SlashCmdList["SNOWBALL"] = function(msg)
         DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Counters reset!")
         
     elseif msg == "show" then
-        if mainFrame then mainFrame:Show() end
+        if mainFrame then 
+            mainFrame:Show()
+            SimpleSnowballTracker_IsHidden = false
+        end
         DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Shown!")
         
     elseif msg == "hide" then
-        if mainFrame then mainFrame:Hide() end
+        if mainFrame then 
+            mainFrame:Hide()
+            SimpleSnowballTracker_IsHidden = true
+        end
         DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Hidden!")
         
     elseif msg == "save" then
