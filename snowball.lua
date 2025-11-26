@@ -106,7 +106,7 @@ local function CreateAutoSave()
     autoSaveFrame:SetScript("OnUpdate", function()
         this.timeSinceLastSave = this.timeSinceLastSave + arg1
         
-        -- Save every 5 minutes (60 seconds)
+        -- Save every 1 minutes (60 seconds)
         if this.timeSinceLastSave >= 60 then
             SaveData()
             this.timeSinceLastSave = 0
@@ -256,7 +256,7 @@ events:SetScript("OnEvent", function()
         CreateUI()
         CreateAutoSave()
         CreateMinimapButton()
-        DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Tracker loaded! Auto-save every 5 minutes.")
+        DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Snowball]|r Tracker loaded! Auto-save every 1 minute.")
         
     elseif event == "UNIT_CASTEVENT" then
         OnSnowballCast(arg1, arg2, arg3, arg4)
