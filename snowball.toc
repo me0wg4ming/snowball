@@ -3,5 +3,5 @@
 ## Notes: Tracks Snowball casts using UNIT_CASTEVENT with auto-save
 ## Author: me0wg4ming
 ## Version: 1.3
-## SavedVariables: SimpleSnowballTracker_Total, SimpleSnowballTracker_AtMe, SimpleSnowballTracker_ByMe, SimpleSnowballTracker_MinimapX, SimpleSnowballTracker_MinimapY, SimpleSnowballTracker_IsHidden
+## SavedVariables: SimpleSnowballTracker_Total, SimpleSnowballTracker_AtMe, SimpleSnowballTracker_ByMe, SimpleSnowballTracker_MinimapX, SimpleSnowballTracker_MinimapY, SimpleSnowballTracker_IsHidden, SimpleSnowballTracker_FrameX, SimpleSnowballTracker_FrameY
 snowball.lua
