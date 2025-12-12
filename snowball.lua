@@ -65,6 +65,10 @@ local function CreateUI()
     
     mainFrame:SetScript("OnDragStop", function()
         this:StopMovingOrSizing()
+        local x, y = this:GetCenter()
+        local ux, uy = UIParent:GetCenter()
+        SimpleSnowballTracker_FrameX = x - ux
+        SimpleSnowballTracker_FrameY = y - uy
     end)
     
     -- Background
@@ -94,6 +98,12 @@ local function CreateUI()
     byMeText:SetPoint("TOPLEFT", 10, -64)
     
     UpdateDisplay()
+    
+    -- Restore position
+    if SimpleSnowballTracker_FrameX and SimpleSnowballTracker_FrameY then
+        mainFrame:ClearAllPoints()
+        mainFrame:SetPoint("CENTER", UIParent, "CENTER", SimpleSnowballTracker_FrameX, SimpleSnowballTracker_FrameY)
+    end
     
     -- Restore visibility state
     if SimpleSnowballTracker_IsHidden then
